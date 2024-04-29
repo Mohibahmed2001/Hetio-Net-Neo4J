@@ -1,4 +1,4 @@
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, functions as F
 
 # Initialize a Spark session
 spark = SparkSession.builder \
