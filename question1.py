@@ -24,14 +24,3 @@ edges_df = spark.read.csv(
 # Show the first few rows of each DataFrame to verify everything is loaded correctly
 nodes_df.show()
 edges_df.show()
-
-# Example operation: Join nodes based on an edge
-# Assuming you want to join nodes based on the source-target relationship in edges
-joined_df = edges_df.join(
-    nodes_df,
-    edges_df.source == nodes_df.id,
-    "inner"
-).select("source", "name", "target")
-
-# Show the result of the join
-joined_df.show()
