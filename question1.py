@@ -5,7 +5,7 @@ spark = SparkSession.builder \
     .appName("TSV Processing") \
     .getOrCreate()
 
-# Read the nodes TSV
+# Read the nodes_edges.tsv
 nodes_df = spark.read.csv(
     "nodes_test.tsv",
     sep="\t",
@@ -13,7 +13,7 @@ nodes_df = spark.read.csv(
     header=True
 )
 
-# Read the edges TSV
+# Read the edges_test.tsv
 edges_df = spark.read.csv(
     "edges_test.tsv",
     sep="\t",
@@ -21,6 +21,6 @@ edges_df = spark.read.csv(
     header=True
 )
 
-# Show the first few rows of each DataFrame to verify everything is loaded correctly
+# Show the first few rows 
 nodes_df.show()
 edges_df.show()
