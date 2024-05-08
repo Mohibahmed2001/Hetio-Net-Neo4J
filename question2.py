@@ -5,29 +5,25 @@ os.environ["PYSPARK_DRIVER_PYTHON"] = "C:\\Users\\ericm\\AppData\\Local\\Program
 
 spark = SparkSession.builder.appName("HetioNet Analysis").getOrCreate()
 
-# Load edges TSV file
+# Load edges_test.tsv
 edges_df = spark.read.option("delimiter", "\t").csv("edges_test.tsv").toDF("source", "metaedge", "target")
 
-# Filter to keep only the edges where metaedge is "CbG"
+# We only keep edges with a meta edge of "CbG"
 cbg_df = edges_df.filter(edges_df.metaedge == "CbG")
 
-# Map each compound to a tuple (compound_id, gene_id)
+# Map each compound 
 mapped_rdd = cbg_df.rdd.map(lambda x: (x[0], x[2]))
 
-# Reduce by key (compound_id) to count the number of genes bound to each compound
+# Reduce by key to count the number of genes bound to each compound
 reduced_rdd = mapped_rdd.groupByKey().mapValues(len)
 
-# Sort the results by the count of genes in descending order
+# Sort the results by in descending order
 sorted_rdd = reduced_rdd.sortBy(lambda x: x[1], ascending=False)
 
-# Take the top 5 compounds with their corresponding gene counts
+# Pick top 5 including gene count
 top_5 = sorted_rdd.take(5)
 
-# Create a DataFrame from the top 5 compounds and gene counts
+# Create a DF of top 5 commpounds
 top_5_df = spark.createDataFrame(top_5, ["Compound", "Gene Count"])
-
-# Show the DataFrame
 top_5_df.show()
-
-# Ensure to stop the Spark session at the end of the script to free up resources
 spark.stop()
